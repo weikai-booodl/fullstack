@@ -1,0 +1,22 @@
+<div class="row">
+    <div class="col-md-4 col-centered">
+
+        <legend>Login</legend>
+        <form role="form" ng-submit="login()" name="form" novalidate>
+            <div class="form-group">
+                <label>User name</label>
+                <input class="form-control" type="text" ng-model="username" required placeholder="firstname.lastname"/>
+
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input class="form-control" type="password" ng-model="password" name="password" required/>
+
+            </div>
+
+            <button type="submit" ng-disabled="form.$invalid" class="btn btn-primary">Submit</button>
+
+        </form>
+
+    </div>
+</div>

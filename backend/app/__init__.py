@@ -11,6 +11,9 @@ def create_app(config_file):
     if os.environ.has_key("FULLSTACK_CONFIG_FILE_PATH"):
         app.config.from_envvar("FULLSTACK_CONFIG_FILE_PATH")
 
+    from auth import auth_init
+    auth_init(app)
+
     from db import db
     db.init_app(app)
 

@@ -3,9 +3,15 @@
 /* Controllers */
 
 angular.module('myApp.controllers', [])
-  .controller('MyCtrl1', ['$scope', function($scope) {
+    .controller('LoginCtrl', ['$scope', function ($scope) {
+        $scope.login = function(){
 
-  }])
-  .controller('MyCtrl2', ['$scope', function($scope) {
+        }
+    }])
+    .controller('ListCtrl', ['$scope', function ($scope) {
 
-  }]);
+    }])
+    .controller('DetailCtrl', ['$scope', function ($scope) {
+
+    }]);
+

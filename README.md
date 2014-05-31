@@ -14,7 +14,10 @@ git clone the repos
 cd frontend
 npm install
 cd ../backend
-
+wget https://launchpad.net/test-db/employees-db-1/1.0.6/+download/employees_db-full-1.0.6.tar.bz2
+tar jxvf employees_db-full-1.0.6.tar.bz2 
+cd employees_db
+mysql -u root --password=fullstack < employees.sql
 ```
 
 
