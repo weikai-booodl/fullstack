@@ -23,7 +23,7 @@
                         <option value=">">&#62;</option>
                         <option value="<">&#60;</option>
                     </select>
-                    <input type="date" ng-model="filters.hire_date.value"/>
+                    <input ng-change="delayed_reload()" type="date" ng-model="filters.hire_date.value"/>
                 </th>
                 <th>
                     <!--<button class="btn btn-default" type="button" data-toggle="tooltip" data-placement="top"-->

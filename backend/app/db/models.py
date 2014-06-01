@@ -57,7 +57,9 @@ class Department(db.Model):
             if 'gender' in filters and filters['gender']:
                 query = query.filter(Employee.gender     == filters['gender'])
 
-            if 'hire_date' in filters and filters['hire_date']:
+            if 'hire_date' in filters and filters['hire_date'] \
+                    and 'operator' in filters['hire_date'] and 'value' in filters['hire_date'] \
+		    and filters['hire_date']['value']:
                 operator = filters['hire_date']['operator']
                 value = datetime.strptime(filters['hire_date']['value'], "%Y-%m-%d").date()
                 if operator == "=":
