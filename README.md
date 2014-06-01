@@ -9,12 +9,15 @@
 
 ##How to setup
 ###Prerequisites
+* The following instructions suppose Ubuntu OS is used
 * Mysql with the employee sample db loaded
-* sudo apt-get install libmysqlclient-dev
+* node/npm 
 
 ###Install 
-The following instructions suppose Ubuntu OS is used
+
 ```
+sudo apt-get install libmysqlclient-dev python-dev
+
 git clone https://github.com/xwk/fullstack.git fullstack
 cd fullstack
 
@@ -31,7 +34,7 @@ npm install
 ###Run
 * create a config file, use fullstack/backend/app/config/settings.py as sample, then set FULLSTACK_CONFIG_FILE_PATH environment variable to this config file
 ** or just simpley eidt the fullstack/backend/app/config/settings.py
-** you should at least change the SQLALCHEMY_DATABASE_URI file
+** you should at least change the SQLALCHEMY_DATABASE_URI file to use the account/password of your mysqldb
 * cd fullstack/backend
 * python run.py
 * Open http://localhost:5000 in your browser
