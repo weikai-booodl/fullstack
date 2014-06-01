@@ -58,11 +58,11 @@ class MyTest(JsonTestCase):
             self.assertEqual(emp.departments_currently_managing, [])
 
     def test_auth_api(self):
-        print "access protected api should return 401"
-        res = self.json_http_request("get", 401, "/api/departments/d001/employees")
+        print "access protected api should return 412"
+        res = self.json_http_request("get", 412, "/api/departments/d001/employees")
 
-        print "login with incorrect credential should get 401"
-        res = self.json_http_request("post", 401, "/auth/login", data=dict(username="1234.1234", password="1234"))
+        print "login with incorrect credential should get 412"
+        res = self.json_http_request("post", 412, "/auth/login", data=dict(username="1234.1234", password="1234"))
 
         print "login with correct credential should get 200"
         res = self.json_http_request("post", 200, "/auth/login", data=dict(username="Georgi.Facello", password=10001))
@@ -74,8 +74,8 @@ class MyTest(JsonTestCase):
         print "logout should return 200"
         res = self.json_http_request("post", 200, "/auth/logout")
 
-        print "access protected api now should return 401"
-        res = self.json_http_request("get", 401, "/api/departments/d001/employees")
+        print "access protected api now should return 412"
+        res = self.json_http_request("get", 412, "/api/departments/d001/employees")
 
         print "login as manager (110039) sould get a d001 as the only deparment he is managing"
         res = self.json_http_request("post", 200, "/auth/login", data=dict(username="Vishwani.Minakawa", password=110039))
@@ -106,44 +106,66 @@ class MyTest(JsonTestCase):
         print "department d001's current employee should not include 499991"
         self.assertTrue(499991 not in [employee["emp_no"] for employee in res.json["employees"]])
 
-        # print "By default, the pagination mechanism will only return the first 20 results"
-        # res = self.json_http_request("get", 200, "/api/departments/d001/employees")
-        # self.assertEqual(len(res.json["employees"]), 20)
-        #
-        # print "the result should have no previous page"
-        # self.assertTrue("previous_page_url" not in res.json["pagination"])
-        #
-        # print "the result should have next page"
-        # self.assertTrue("next_page_url" in res.json["pagination"])
-        #
+        print "By default, the pagination mechanism will only return the first 20 results"
+        res = self.json_http_request("get", 200, "/api/departments/d001/employees")
+        self.assertEqual(len(res.json["employees"]), 20)
+
+        print "the result should have no previous page"
+        self.assertTrue("prev_page" not in res.json["pagination_hint"])
+
+        print "the result should have next page"
+        self.assertTrue("next_page" in res.json["pagination_hint"])
+
         # print "total should be", 14842
-        # self.assertEqual(res.json["pagination"]["total"], 14842)
-        #
-        # last_employee_of_first_page = res.json["employees"][-1]
-        #
-        # print "follow the next_page_url"
-        # res = self.json_http_request("get", 200, res.json["pagination"]["next_page_url"])
-        # self.assertEqual(len(res.json["employees"]), 20)
-        #
-        # print "second page should have both next_page_url and previous_page_url"
-        # self.assertTrue("next_page_url" in res.json["pagination"])
-        # self.assertTrue("previous_page_url" in res.json["pagination"])
-        #
-        # first_employee_of_2nd_page = res.json["employees"][0]
-        #
-        # self.assertGreaterEqual(first_employee_of_2nd_page["first_name"], last_employee_of_first_page["first_name"])
-        # self.assertNotEqual(first_employee_of_2nd_page["emp_no"], last_employee_of_first_page["emp_no"])
-        #
-        # print "request 10 rows from offset 20"
-        # res = self.json_http_request("get", 200, "/api/departments/d001/employees?limit=10&offset=20")
-        # self.assertEqual(len(res.json["employees"]), 10)
-        #
-        # first_employee_of_this_page = res.json["employees"][0]
-        # self.assertNotEqual(first_employee_of_2nd_page["emp_no"], first_employee_of_this_page["emp_no"])
-        #
-        # print "try to request beyond the range should get empty result"
-        # res = self.json_http_request("get", 200, "/api/departments/d001/employees?limit=40&offset=200000")
-        #self.assertEqual(len(res.json["employees"]), 0)
+        # self.assertEqual(res.json["pagination_hint"]["total"], 14842)
+
+        last_employee_of_first_page = res.json["employees"][-1]
+
+        print "follow the next_page url", res.json["pagination_hint"]["next_page"]["url"]
+
+        #in testing app, we have to taken out the http://host portion. otherwise the behavior is strange in
+        #that the query string will be stripped off
+        url = res.json["pagination_hint"]["next_page"]["url"].split("/", 3)[-1]
+        res = self.json_http_request("get", 200, url)
+        self.assertEqual(len(res.json["employees"]), 20)
+
+        print "second page should have both next_page and previous_page"
+        print res.json
+
+        self.assertTrue("next_page" in res.json["pagination_hint"])
+        self.assertTrue("prev_page" in res.json["pagination_hint"])
+
+        print "the first person in the 2nd page should have higher emp_no than the last person in the first page"
+        first_employee_of_2nd_page = res.json["employees"][0]
+
+        self.assertGreater(first_employee_of_2nd_page["emp_no"], last_employee_of_first_page["emp_no"])
+
+        print "request 10 rows from offset 20"
+        res = self.json_http_request("get", 200, "/api/departments/d001/employees?limit=10&offset=20")
+        self.assertEqual(len(res.json["employees"]), 10)
+
+        print "no matter how many items in a page, the offset 20 should return the same person"
+        first_employee_of_this_page = res.json["employees"][0]
+        self.assertEqual(first_employee_of_2nd_page["emp_no"], first_employee_of_this_page["emp_no"])
+
+        print "try to request beyond the range should get empty result"
+        res = self.json_http_request("get", 200, "/api/departments/d001/employees?limit=40&offset=200000")
+        self.assertEqual(len(res.json["employees"]), 0)
+
+        print "try to retrieve only employees whose first name contains 'risti' in d001 (there is at least one)"
+        res = self.json_http_request("get", 200, "/api/departments/d001/employees?filters=%s" %
+            json.dumps(dict(first_name="risti")))
+
+        self.assertGreater(len(res.json["employees"]), 0)
+        for employee in res.json["employees"]:
+            self.assertTrue(employee["first_name"].find("risti")>=0)
+
+        print "try to search exact firstanem Genki in dept 001"
+        res = self.json_http_request("get", 200, "/api/departments/d001/employees?filters=%s" %
+            json.dumps(dict(first_name="Genki")))
+
+        self.assertGreater(len(res.json["employees"]), 0)
+        print res.json
 
     #
     # def test_get_employee_api(self):

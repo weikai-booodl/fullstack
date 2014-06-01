@@ -30,23 +30,45 @@ class Department(db.Model):
     def get_by_dept_no(cls, dept_no):
         return db.session.query(Department).filter(Department.dept_no == dept_no).first()
 
-    @property
-    def employees(self):
-        # res = db.session.query(Department, Employee, Salary, Title)\
-        #                 .join(DeptEmployee, and_(DeptEmployee.dept_no == Department.dept_no,
-        #                                          DeptEmployee.to_date > today()))\
-        #                 .join(Employee, Employee.emp_no == DeptEmployee.emp_no)\
-        #                 .join(Salary, and_(Salary.emp_no == Employee.emp_no,
-        #                                     Salary.to_date > today()))\
-        #                 .join(Title, and_(Title.emp_no == Employee.emp_no,
-        #                                     Title.to_date > today()))\
-        #                 .filter(Department.dept_no == self.dept_no)\
-        #                 .order_by(Employee.first_name)
-        res = db.session.query(Employee).filter(Department.dept_no == self.dept_no,
+    def get_employees(self, offset=0, limit=-1, filters=None):
+        """
+        :param offset: used in pagination, where to start
+        :param limit: how many to return -1 means not limit
+        :return: a list of employees in this deparment ordered by their first name, if pagination parameter is
+         provided, only return the specified range
+        """
+        query = db.session.query(Employee).filter(Department.dept_no == self.dept_no,
                                                 DeptEmployee.dept_no == Department.dept_no,
                                                 DeptEmployee.to_date > today(),
-                                                Employee.emp_no == DeptEmployee.emp_no)
-        return res
+                                                Employee.emp_no == DeptEmployee.emp_no,
+                                                Title.emp_no == Employee.emp_no,
+                                                Title.to_date > today()
+                                                )
+
+
+
+        if filters:
+            if 'first_name' in filters and filters['first_name']:
+                query = query.filter(Employee.first_name.ilike("%" + filters['first_name'] + "%"))
+            if 'last_name' in filters and filters['last_name']:
+                query = query.filter(Employee.last_name.ilike("%" + filters['last_name'] + "%"))
+            if 'current_title' in filters and filters['current_title']:
+                query = query.filter(Title.title.ilike("%" + filters['current_title'] + "%"))
+            if 'gender' in filters and filters['gender']:
+                query = query.filter(Employee.gender     == filters['gender'])
+
+            if 'hire_date' in filters and filters['hire_date']:
+                operator = filters['hire_date']['operator']
+                value = datetime.strptime(filters['hire_date']['value'], "%Y-%m-%d").date()
+                if operator == "=":
+                    query = query.filter(Employee.hire_date == value)
+                elif operator == ">":
+                    query = query.filter(Employee.hire_date > value)
+                elif operator == "<":
+                    query = query.filter(Employee.hire_date < value)
+
+        query = query.order_by(Employee.emp_no).offset(offset)
+        return query.all() if limit == -1 else query.limit(limit).all()
 
 
 class DeptEmployee(db.Model):
@@ -163,4 +185,6 @@ class Employee(db.Model):
             "current_department_name": self.current_department.dept_name,
             "current_salary": self.current_salary.salary,
             "current_title": self.current_title.title,
-            }        
+            }
+
+

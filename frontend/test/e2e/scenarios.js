@@ -1,42 +1,50 @@
 'use strict';
 
-/* https://github.com/angular/protractor/blob/master/docs/getting-started.md */
 
-describe('my app', function() {
-
-  browser.get('index.html');
-
-  it('should automatically redirect to /view1 when location hash/fragment is empty', function() {
-    expect(browser.getLocationAbsUrl()).toMatch("/view1");
-  });
+describe('Fullstack app', function () {
 
 
-  describe('view1', function() {
+    browser.post("/api/logout");
 
-    beforeEach(function() {
-      browser.get('index.html#/view1');
+
+    it('hit homepage should automatically be redirected to /#/login when not logged in', function () {
+        browser.get('/');
+        browser.getLocationAbsUrl().then(function (url) {
+            expect(url.split('#')[1]).toBe('/login');
+        });
+
     });
 
 
-    it('should render view1 when user navigates to /view1', function() {
-      expect(element.all(by.css('[ng-view] p')).first().getText()).
-        toMatch(/partial for view 1/);
+    describe('login', function () {
+
+        beforeEach(function () {
+            browser.get('/#/login');
+        });
+
+
+        it('should redirect to departement_info view when a manager logs in', function () {
+            element(by.model('username')).sendKeys("Vishwani.Minakawa");
+            element(by.model('password')).sendKeys("110039");
+            element(by.css('#login_btn')).click();
+            browser.getLocationAbsUrl().then(function (url) {
+                expect(url.split('#')[1]).toBe('/deparment/d001/employees');
+            });
+        });
+
+
+        it('should redirect to employee_info view when a non-manager logs in', function () {
+            element(by.model('username')).sendKeys("Georgi.Facello");
+            element(by.model('password')).sendKeys("10001");
+            element(by.css('#login_btn')).click();
+            browser.getLocationAbsUrl().then(function (url) {
+                expect(url.split('#')[1]).toBe('/employees/10001');
+            });
+
+
+        });
+
     });
 
-  });
 
-
-  describe('view2', function() {
-
-    beforeEach(function() {
-      browser.get('index.html#/view2');
-    });
-
-
-    it('should render view2 when user navigates to /view2', function() {
-      expect(element.all(by.css('[ng-view] p')).first().getText()).
-        toMatch(/partial for view 2/);
-    });
-
-  });
 });

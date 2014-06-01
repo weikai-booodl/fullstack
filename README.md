@@ -1,4 +1,4 @@
-#Full stack sample
+#A sample web app to view mysql employee sample db 
 
 
 ##Overview
@@ -8,26 +8,36 @@
 
 
 ##How to setup
+###Prerequisites
+* Mysql with the employee sample db loaded
+* sudo apt-get install libmysqlclient-dev
+
+###Install 
 The following instructions suppose Ubuntu OS is used
 ```
-git clone the repos 
-cd frontend
+git clone https://github.com/xwk/fullstack.git fullstack
+cd fullstack
+
+virtualenv fullstack
+source fullstack/bin/activate
+
+cd backend
+pip install -r requirements.txt
+
+cd ../frontend
 npm install
-cd ../backend
-wget https://launchpad.net/test-db/employees-db-1/1.0.6/+download/employees_db-full-1.0.6.tar.bz2
-tar jxvf employees_db-full-1.0.6.tar.bz2 
-cd employees_db
-mysql -u root --password=fullstack < employees.sql
 ```
 
+###Run
+* create a config file, use fullstack/backend/app/config/settings.py as sample, then set FULLSTACK_CONFIG_FILE_PATH environment variable to this config file
+** or just simpley eidt the fullstack/backend/app/config/settings.py
+** you should at least change the SQLALCHEMY_DATABASE_URI file
+* cd fullstack/backend
+* python run.py
+* Open http://localhost:5000 in your browser
 
-###How to run test
 
-##Frontend unittest
-```
-cd frontend
-npm test
-```
+##Test
 
 ##Backend unittest
 ```
@@ -35,4 +45,11 @@ cd backend
 python test/unit_test.py
 ```
 
-##
+##Things to improve if I have more time
+* Create test cases for frontend UT and functional test with Karma and Protractor
+* Implement frontend build process with Browserify and Grunt
+* Add caching layer in API view handlers
+* If need to deploy to production,
+** use Nginx+Uwsgi to serve the site
+** enable https
+** make Dockerfile to automate the provisoning and deployment process 

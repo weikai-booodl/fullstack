@@ -1,7 +1,7 @@
 from optparse import OptionParser
 from app import create_app
 
-app = create_app("config/default.py")
+app = create_app("config/settings.py")
 
 if __name__ == "__main__":
     parser = OptionParser(add_help_option=False)
