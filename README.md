@@ -55,6 +55,6 @@ python test/unit_test.py
 * Implement frontend build process with Browserify and Grunt
 * Add caching layer in API view handlers
 * If need to deploy to production,
-** use Nginx+Uwsgi to serve the site
-** enable https
-** make Dockerfile to automate the provisoning and deployment process 
+* use Nginx+Uwsgi to serve the site
+* enable https
+* make Dockerfile to automate the provisoning and deployment process 
