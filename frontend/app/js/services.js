@@ -11,7 +11,7 @@ angular.module('myApp.services', [])
         return {
             'responseError': function(rejection) {
                 if (rejection.status==412) {
-                    $location.path("/login");
+                    $location.path("/login").search({});
                 }
                 return $q.reject(rejection);
             }

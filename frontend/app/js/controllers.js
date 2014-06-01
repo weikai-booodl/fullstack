@@ -15,7 +15,7 @@ angular.module('myApp.controllers', [])
                 .success(function (data, status, headers, config) {
                     $cookieStore.remove('current_user');
                     $rootScope.logged_in = false;
-                    $location.path("/login");
+                    $location.path("/login").search({});
                 });
         };
 
@@ -34,7 +34,7 @@ angular.module('myApp.controllers', [])
                     .success(function (data, status, headers, config) {
                         $cookieStore.put('current_user', data);
                         $rootScope.logged_in = true;
-                        $location.path("/");
+                        $location.path("/").search({});
                     })
                     .error(function (data, status, headers, config) {
                         $scope.message = data.message;
@@ -115,7 +115,7 @@ angular.module('myApp.controllers', [])
             } else {
                 redirect_to_path = "/login";
             }
-            $location.path(redirect_to_path).replace()
+            $location.path(redirect_to_path).search({}).replace()
         }]);
 
 //      if (current_user == null){
