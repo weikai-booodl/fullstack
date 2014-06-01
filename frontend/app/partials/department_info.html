@@ -16,7 +16,10 @@
                         <option value="M">Male</option>
                     </select>
                 </th>
-                <th>Job Title = <input ng-change="delayed_reload()" ng-model="filters.current_title" placeholder="N/A"/></th>
+                <th>Job Title =
+                    <select ng-change="reload()" ng-model="filters.current_title" ng-options="title for title in titles">
+                    </select>
+                </th>
                 <th>Hire date
                     <select ng-change="reload()" ng-model="filters.hire_date.operator">
                         <option value="=">=</option>

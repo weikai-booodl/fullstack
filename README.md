@@ -36,7 +36,7 @@ npm install
 ** or just simpley eidt the fullstack/backend/app/config/settings.py
 ** you should at least change the SQLALCHEMY_DATABASE_URI file to use the account/password of your mysqldb
 * cd fullstack/backend
-* python run.py
+* python run.py -d
 * Open http://localhost:5000 in your browser
 
 

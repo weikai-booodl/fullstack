@@ -92,7 +92,12 @@ angular.module('myApp.controllers', [])
                 auto_search_timer = $timeout(function () {
                     $scope.reload();
                 }, delay);
-            }
+            };
+
+            $http.get("/api/titles")
+                .success(function (data, status, headers, config) {
+                    $scope.titles = data.titles;
+                });
         }])
 
     .controller('EmployeeInfoCtrl', ['$scope', '$routeParams', '$http', function ($scope, $routeParams, $http) {
