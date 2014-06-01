@@ -1,0 +1,68 @@
+<div class="row">
+    <div class="col-md-10 col-centered">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Employee id</th>
+                <th>First name =
+                    <input ng-change="delayed_reload()" ng-model="filters.first_name" placeholder="N/A"/>
+                </th>
+                <th>Last name =
+                    <input ng-change="delayed_reload()" ng-model="filters.last_name" placeholder="N/A"/>
+                </th>
+                <th>Gender =
+                    <select ng-change="reload()" ng-model="filters.gender">
+                        <option value="F">Female</option>
+                        <option value="M">Male</option>
+                    </select>
+                </th>
+                <th>Job Title = <input ng-change="delayed_reload()" ng-model="filters.current_title" placeholder="N/A"/></th>
+                <th>Hire date
+                    <select ng-change="reload()" ng-model="filters.hire_date.operator">
+                        <option value="=">=</option>
+                        <option value=">">&#62;</option>
+                        <option value="<">&#60;</option>
+                    </select>
+                    <input type="date" ng-model="filters.hire_date.value"/>
+                </th>
+                <th>
+                    <!--<button class="btn btn-default" type="button" data-toggle="tooltip" data-placement="top"-->
+                            <!--title="Input search criteria and then click search to narrow down results"-->
+                            <!--ng-click="reload()">-->
+                        <!--Search-->
+                    <!--</button>-->
+                    <button class="btn btn-warning" type="button"
+                            ng-click="reset_search_crtiera()">
+                        Reset
+                    </button>
+
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="employee in data.employees">
+                <td><a ng-href="#/employees/{{employee.emp_no}}">{{employee.emp_no}}</a></td>
+                <td>{{employee.first_name}}</td>
+                <td>{{employee.last_name}}</td>
+                <td>{{employee.gender}}</td>
+                <td>{{employee.current_title}}</td>
+                <td>{{employee.hire_date | date : 'd/M/yyyy'}}</td>
+            </tr>
+            </tbody>
+
+            <tfoot>
+            </tfoot>
+        </table>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-3 col-centered">
+        <h4>
+            <a ng-show="data.pagination_hint.prev_page" href=""
+               ng-click="to_page(data.pagination_hint.prev_page)">Previous page</a>
+            |
+            <a ng-show="data.pagination_hint.next_page" href=""
+               ng-click="to_page(data.pagination_hint.next_page)">Next page</a>
+        </h4>
+    </div>
+</div>
