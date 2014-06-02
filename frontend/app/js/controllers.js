@@ -107,8 +107,8 @@ angular.module('myApp.controllers', [])
             });
     }])
 
-    .controller('HomepageCtrl', ['$scope', '$cookieStore', '$location',
-        function ($scope, $cookieStore, $location) {
+    .controller('HomepageCtrl', ['$scope', '$location',
+        function ($scope, $location) {
             var current_user = $scope.get_current_user();
             var redirect_to_path;
             if (current_user) {
