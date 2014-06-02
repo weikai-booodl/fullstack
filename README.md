@@ -125,6 +125,6 @@ Notice, due to time limit, there is only one very basic e2e test case at the mom
 * Implement frontend build process with Browserify and Grunt
 * Add caching layer in API view handlers
 * If need to deploy to production,
-* use Nginx+Uwsgi to serve the site
-* enable https
-* make Dockerfile to automate the provisoning and deployment process 
+  * use Nginx+Uwsgi to serve the site
+  * enable https
+  * create Docker or SaltStack script to automate the provisioning and deployment process 
