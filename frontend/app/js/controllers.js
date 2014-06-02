@@ -94,10 +94,11 @@ angular.module('myApp.controllers', [])
                 }, delay);
             };
 
-            $http.get("/api/titles")
+            $http.get("/api/titles", { cache: true })
                 .success(function (data, status, headers, config) {
-                    $scope.titles = data.titles;
+                    $scope.title_enum = data.titles;
                 });
+
         }])
 
     .controller('EmployeeInfoCtrl', ['$scope', '$routeParams', '$http', function ($scope, $routeParams, $http) {

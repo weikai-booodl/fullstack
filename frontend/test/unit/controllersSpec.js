@@ -134,7 +134,7 @@ describe('controllers', function () {
                 .respond({titles: title_options});
             ctrl = $controller('DepartmentInfoCtrl', {$scope: scope});
             $httpBackend.flush();
-            expect(scope.titles).toEqualData(title_options);
+            expect(scope.title_enum).toEqualData(title_options);
             expect(scope.data).toEqualData(first_page_data);
         });
 
