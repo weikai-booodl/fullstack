@@ -130,7 +130,7 @@ describe('controllers', function () {
             $routeParams.dept_no = "d001";
             $httpBackend.expectGET(/\/api\/departments\/d001\/employees*/)
                 .respond(first_page_data);
-            $httpBackend.expectGET("/api/titles")
+            $httpBackend.whenGET("/api/titles")
                 .respond({titles: title_options});
             ctrl = $controller('DepartmentInfoCtrl', {$scope: scope});
             $httpBackend.flush();

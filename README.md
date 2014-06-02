@@ -55,10 +55,16 @@ python test/unit_test.py
 cd frontend
 npm test
 ```
-
+###End-to-end test
+```
+cd frontend
+npm run update-webdriver
+npm run protractor
+```
+Notice, due to time limit, there is only one very basic e2e test case at the moment
 
 ##Things to improve if I have more time
-* Create more UT cases for better code coverage and also implement e2e functional test with  Protractor
+* Create more test cases for better code coverage
 * Implement frontend build process with Browserify and Grunt
 * Add caching layer in API view handlers
 * If need to deploy to production,
