@@ -44,14 +44,21 @@ npm install
 
 ##Test
 
-##Backend unittest
+##Backend unit test
 ```
 cd backend
 python test/unit_test.py
 ```
 
+###Frontend unit tets
+```
+cd frontend
+npm test
+```
+
+
 ##Things to improve if I have more time
-* Create test cases for frontend UT and functional test with Karma and Protractor
+* Create more UT cases for better code coverage and also implement e2e functional test with  Protractor
 * Implement frontend build process with Browserify and Grunt
 * Add caching layer in API view handlers
 * If need to deploy to production,
